@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Woodworking Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f5f1eb 0%, #ebe3d6 100%);
+            color: #3c3832;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            color: #5d4e37;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .header .description {
+            font-size: 1.1rem;
+            color: #6b5b4a;
+            max-width: 600px;
+            margin: 0 auto;
+            font-style: italic;
+        }
+
+        /* Gallery Grid */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(93, 78, 55, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(93, 78, 55, 0.2);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 250px;
+            background: #d4c4b0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #8b7355;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #5d4e37;
+            margin-bottom: 0.8rem;
+        }
+
+        .project-description {
+            color: #6b5b4a;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(60, 56, 50, 0.95);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            margin: 5% auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            color: #5d4e37;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #3c3832;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #5d4e37;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .modal-description {
+            text-align: center;
+            color: #6b5b4a;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Carousel */
+        .carousel-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .carousel-images {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-image {
+            min-width: 100%;
+            height: 500px;
+            background: #d4c4b0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b7355;
+            font-size: 1.2rem;
+        }
+
+        .carousel-image img {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #5d4e37;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-nav:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-prev {
+            left: 1rem;
+        }
+
+        .carousel-next {
+            right: 1rem;
+        }
+
+        .carousel-indicators {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(93, 78, 55, 0.3);
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .indicator.active {
+            background: #5d4e37;
+        }
+
+        .loading {
+            text-align: center;
+            color: #6b5b4a;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                padding: 1.5rem;
+            }
+            
+            .carousel-image {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 id="site-title">Woodworking Portfolio</h1>
+            <div class="description" id="site-description">
+                Handcrafted pieces showcasing the beauty of natural wood
+            </div>
+        </header>
+
+        <div class="gallery" id="gallery">
+            <div class="loading">Loading projects...</div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-description" id="modal-description"></div>
+            <div class="carousel-container">
+                <div class="carousel">
+                    <div class="carousel-images" id="carousel-images"></div>
+                    <button class="carousel-nav carousel-prev">‹</button>
+                    <button class="carousel-nav carousel-next">›</button>
+                </div>
+                <div class="carousel-indicators" id="carousel-indicators"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let projects = [];
+        let currentProject = 0;
+        let currentImage = 0;
+
+// Your actual folder structure
+const folderNames = [
+    "Business ArtwoodUK",
+    "Collapsing Shed",
+    "Custom Bag",
+    "First Project Chopping Board",
+    "Jewlery Boxes"
+];
+
+// Image files for each project
+const projectImages = {
+    "Business ArtwoodUK": [
+        "_DSC0186.jpg",
+        "_DSC0194.jpg",
+        "MDF group2.jpg",
+        "MDF stacked2.jpg"
+    ],
+    "Collapsing Shed": [
+        "66586499056__C737FA6F-97D2-40AA-8A02-2E8CC1B6BCE7.jpeg",
+        "66847078156__0295BB7C-18D7-4D46-BC5B-2A5052C3C775.jpeg",
+        "67000829115__D94D1281-C8DB-42FE-A978-7A9534AD5EED.jpeg",
+        "67051911440__6FFBC143-F269-4B6D-920F-60B0FDFF6CD3.jpeg",
+        "67087619003__CE984781-74A8-4483-8CF1-A431C7887418.jpeg",
+        "IMG_1985.jpeg",
+        "IMG_1987.jpeg",
+        "IMG_2002.jpeg",
+        "IMG_2027.jpeg"
+    ],
+    "Custom Bag": [
+        "IMG_2224.jpg",
+        "IMG_2228.jpg",
+        "IMG_2232.jpg",
+        "IMG_2239.jpg",
+        "IMG_2245.jpg",
+        "IMG_2249.jpg"
+    ],
+    "First Project Chopping Board": [
+        "_DSC0055.jpg",
+        "_DSC0061.jpg",
+        "_DSC0064.jpg"
+    ],
+    "Jewlery Boxes": [
+        "IMG_2144-2.jpg",
+        "IMG_2146-2.jpg",
+        "IMG_2156-2.jpg",
+        "IMG_2158-2.jpg",
+        "IMG_2163-2.jpg",
+        "IMG_2196-2.jpg",
+        "IMG_2202-2.jpg"
+    ]
+};
+
+        // Load site description
+        async function loadSiteData() {
+            try {
+                const response = await fetch('description.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('site-title').textContent = data.title || 'Woodworking Portfolio';
+                    document.getElementById('site-description').textContent = data.description || 'Handcrafted pieces showcasing the beauty of natural wood';
+                    document.title = data.title || 'Woodworking Portfolio';
+                }
+            } catch (error) {
+                console.log('Using default site data');
+            }
+        }
+
+        // Discover projects from folder structure
+        async function discoverProjects() {
+            projects = [];
+            
+            for (const folderName of folderNames) {
+                const project = {
+                    id: folderName,
+                    title: folderName,
+                    shortDescription: `Beautiful ${folderName.toLowerCase()} project`,
+                    longDescription: `Detailed view of the ${folderName.toLowerCase()} project showcasing craftsmanship and attention to detail.`,
+                    images: projectImages[folderName] || []
+                };
+
+                // Try to load description file
+                try {
+                    const response = await fetch(`Woodworking/${encodeURIComponent(folderName)}/description.json`);
+                    if (response.ok) {
+                        const desc = await response.json();
+                        project.shortDescription = desc.shortDescription || project.shortDescription;
+                        project.longDescription = desc.longDescription || project.longDescription;
+                        // Use custom cover image if specified
+                        if (desc.cover && project.images.includes(desc.cover)) {
+                            const coverIndex = project.images.indexOf(desc.cover);
+                            project.images.splice(coverIndex, 1);
+                            project.images.unshift(desc.cover);
+                        }
+                    }
+                } catch (error) {
+                    console.log(`No description file for ${folderName}, using defaults`);
+                }
+
+                if (project.images.length > 0) {
+                    projects.push(project);
+                }
+            }
+        }
+
+        // Create gallery
+        function createGallery() {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+            
+            if (projects.length === 0) {
+                gallery.innerHTML = '<div class="loading">No projects found. Make sure your Woodworking folder contains the project subfolders with images.</div>';
+                return;
+            }
+            
+            projects.forEach((project, index) => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.onclick = () => openModal(index);
+                
+                const firstImage = project.images[0];
+                const imagePath = `Woodworking/${encodeURIComponent(project.id)}/${encodeURIComponent(firstImage)}`;
+                
+                card.innerHTML = `
+                    <div class="project-image">
+                        <img src="${imagePath}" 
+                             alt="${project.title}" 
+                             onerror="this.style.display='none'; this.parentElement.innerHTML='${project.title}<br>Image Preview'">
+                    </div>
+                    <div class="project-info">
+                        <div class="project-title">${project.title}</div>
+                        <div class="project-description">${project.shortDescription}</div>
+                    </div>
+                `;
+                
+                gallery.appendChild(card);
+            });
+        }
+
+        // Open modal
+        function openModal(projectIndex) {
+            currentProject = projectIndex;
+            currentImage = 0;
+            const project = projects[projectIndex];
+            
+            document.getElementById('modal-title').textContent = project.title;
+            document.getElementById('modal-description').textContent = project.longDescription;
+            
+            createCarousel(project);
+            document.getElementById('modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Create carousel
+        function createCarousel(project) {
+            const carouselImages = document.getElementById('carousel-images');
+            const indicators = document.getElementById('carousel-indicators');
+            
+            carouselImages.innerHTML = '';
+            indicators.innerHTML = '';
+            
+            project.images.forEach((image, index) => {
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'carousel-image';
+                const imagePath = `Woodworking/${encodeURIComponent(project.id)}/${encodeURIComponent(image)}`;
+                imageDiv.innerHTML = `
+                    <img src="${imagePath}" 
+                         alt="${project.title} ${index + 1}"
+                         onerror="this.style.display='none'; this.parentElement.innerHTML='${project.title}<br>Image ${index + 1}'">
+                `;
+                carouselImages.appendChild(imageDiv);
+                
+                const indicator = document.createElement('span');
+                indicator.className = 'indicator';
+                if (index === 0) indicator.classList.add('active');
+                indicator.onclick = () => goToImage(index);
+                indicators.appendChild(indicator);
+            });
+        }
+
+        // Navigate carousel
+        function goToImage(index) {
+            currentImage = index;
+            updateCarousel();
+        }
+
+        function nextImage() {
+            currentImage = (currentImage + 1) % projects[currentProject].images.length;
+            updateCarousel();
+        }
+
+        function prevImage() {
+            currentImage = (currentImage - 1 + projects[currentProject].images.length) % projects[currentProject].images.length;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const carouselImages = document.getElementById('carousel-images');
+            const indicators = document.querySelectorAll('.indicator');
+            
+            carouselImages.style.transform = `translateX(-${currentImage * 100}%)`;
+            
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentImage);
+            });
+        }
+
+        // Event listeners
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        document.querySelector('.carousel-next').onclick = nextImage;
+        document.querySelector('.carousel-prev').onclick = prevImage;
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('modal')) {
+                document.getElementById('modal').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('modal').style.display === 'block') {
+                if (e.key === 'ArrowLeft') prevImage();
+                if (e.key === 'ArrowRight') nextImage();
+                if (e.key === 'Escape') {
+                    document.getElementById('modal').style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        });
+
+        // Initialize site
+        async function initializeSite() {
+            try {
+                await loadSiteData();
+                await discoverProjects();
+                createGallery();
+            } catch (error) {
+                console.error('Error initializing site:', error);
+                document.getElementById('gallery').innerHTML = '<div class="loading">Error loading projects. Check console for details.</div>';
+            }
+        }
+
+        // Start the site
+        initializeSite();
+    </script>
+</body>
+</html>
